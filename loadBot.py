@@ -9,7 +9,7 @@ class DemoBOT:
     chatbot = ChatBot(
         # ChatBot 的名字
         "DemoBOT",
-        storage_adapter = "chatterbot.storage.JsonFileStorageAdapter",
+        input_adapter="chatterbot.input.VariableInputTypeAdapter",
         # 設定訓練的資料庫輸出於根目錄，並命名為 DemoBOT_DB.json
         database = "./DemoBOT_DB.json"    
     )
