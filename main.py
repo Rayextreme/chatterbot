@@ -1,67 +1,65 @@
-#載入函式庫
+# Copyright 2015 Google Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# [START app]
+import logging
+import pickle
 import sys
+from flask import Flask
 from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer
 
-#宣告類別
 class DemoBOT:
-    # 類別內含一個import的ChatBot物件
     chatbot = ChatBot(
-        # ChatBot 的名字
         "DemoBOT",
-        #這一行我看不是很有
         storage_adapter = "chatterbot.storage.JsonFileStorageAdapter",
-        # 設定訓練的資料庫輸出於根目錄之目錄，並命名為 DemoBOT_DB.json
         database = "./DemoBOT_DB.json"    
     )
-    #建構子
+
     def __init__(self):
-        #ChatterBot中的訓練者設定，沒有深入研究
         self.chatbot.set_trainer(ChatterBotCorpusTrainer)
-        #載入chinese中的檔案作為對話庫，固定路徑寫在函式內
-        #C:\Users\username\AppData\Local\Programs\Python\Python36-32\Lib\site-packages\chatterbot_corpus\data\chinese
-        #self.chatbot.train("chatterbot.corpus.chinese")
-        #相對路徑
-        self.chatbot.train("./corpus.chinese")
+        self.chatbot.train("chatterbot.corpus.chinese")
 
-#獲得回應的副函式
     def getResponse(self, message=""):
-        #chatbot內建的方法，用來取得對message做為輸入時機器人的回應
         return self.chatbot.get_response(message)
-        
 
-#類似於C++的main
-if __name__ == "__main__":
-    #socket define
-    import socket
-    #沒有深入研究
-    sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    sock.bind(('127.0.0.1', 8001))  
-    #監聽指令，沒有深入研究
-    sock.listen(5)
-     #socket definend
-    
-    #建立聊天機器人物件
-    bot = DemoBOT()
-    
-    print('\ndone\n')#告知建立完成
-    
-    s="";
-    #呼叫回應副函式獲得回應
+filehandler = open('ChatBot.obj', 'rb') 
+bot = pickle.load(filehandler)
 
-    connection,address = sock.accept()
-        
-    while(True):
-        #前IP，後port
-        try:
-            connection.settimeout(5)
-            buf = connection.recv(1024)
-            print(buf.decode("utf-8"))
-            s = bot.getResponse(buf.decode("utf-8"))
-            connection.send(str(s).encode('utf-8'))
-        except socket.timeout:
-            print('socket time out')
-            
-    connection.close()
-        
-    
+bot.getResponse('還不錯')
+
+args_on = [arg for arg in self.request.arguments() if self.request.get(arg) == 'on']
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    """Return a friendly HTTP greeting."""
+    return args_on
+
+
+@app.errorhandler(500)
+def server_error(e):
+    logging.exception('An error occurred during a request.')
+    return """
+    An internal error occurred: <pre>{}</pre>
+    See logs for full stacktrace.
+    """.format(e), 500
+
+
+if __name__ == '__main__':
+    # This is used when running locally. Gunicorn is used to run the
+    # application on Google App Engine. See entrypoint in app.yaml.
+    app.run(host='127.0.0.1', port=8080, debug=True)
+# [END app]
