@@ -11,7 +11,7 @@ class DemoBOT:
         "DemoBOT",
         input_adapter="chatterbot.input.VariableInputTypeAdapter",
         # 設定訓練的資料庫輸出於根目錄，並命名為 DemoBOT_DB.json
-        database = "./DemoBOT_DB.json"    
+        database = "./DemoBOT_DB"    
     )
 
     def __init__(self):

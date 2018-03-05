@@ -24,7 +24,7 @@ class DemoBOT:
     chatbot = ChatBot(
         "DemoBOT",
         input_adapter = "chatterbot.input.VariableInputTypeAdapter",
-        database = "./DemoBOT_DB.json"    
+        database = "./DemoBOT_DB"    
     )
 
     def __init__(self):
@@ -34,10 +34,10 @@ class DemoBOT:
     def getResponse(self, message=""):
         return self.chatbot.get_response(message)
 
-filehandler = open('ChatBot.obj', 'rb') 
-bot = pickle.load(filehandler)
+#filehandler = open('ChatBot.obj', 'rb') 
+#bot = pickle.load(filehandler)
 
-args_on = bot.getResponse('還不錯');
+#args_on = bot.getResponse('還不錯');
 
 #args_on = [arg for arg in self.request.arguments() if self.request.get(arg) == 'on']
 
@@ -61,8 +61,5 @@ def server_error(e):
 if __name__ == '__main__':
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
-    filehandler = open('ChatBot.obj', 'rb') 
-    bot = pickle.load(filehandler)
-    print(bot.getResponse('還不錯'))
     app.run(host='127.0.0.1', port=8080, debug=True)
 # [END app]
