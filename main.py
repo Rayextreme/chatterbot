@@ -1,3 +1,4 @@
+#coding:utf-8
 # Copyright 2015 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,28 +17,13 @@
 import logging
 import pickle
 import sys
+from DemoBOT import DemoBOT
 from flask import Flask
-from chatterbot import ChatBot
-from chatterbot.trainers import ChatterBotCorpusTrainer
 
-class DemoBOT:
-    chatbot = ChatBot(
-        "DemoBOT",
-        input_adapter = "chatterbot.input.VariableInputTypeAdapter",
-        database = "./DemoBOT_DB"    
-    )
+filehandler = open('ChatBot.obj', 'rb') 
+bot = pickle.load(filehandler)
 
-    def __init__(self):
-        self.chatbot.set_trainer(ChatterBotCorpusTrainer)
-        self.chatbot.train("chatterbot.corpus.chinese")
-
-    def getResponse(self, message=""):
-        return self.chatbot.get_response(message)
-
-#filehandler = open('ChatBot.obj', 'rb') 
-#bot = pickle.load(filehandler)
-
-#args_on = bot.getResponse('還不錯');
+args_on = bot.getResponse('還不錯');
 
 #args_on = [arg for arg in self.request.arguments() if self.request.get(arg) == 'on']
 
@@ -61,5 +47,8 @@ def server_error(e):
 if __name__ == '__main__':
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
+     ----#PC test----
+    print(bot.getResponse("還不錯"));
+    #----PC test----
     app.run(host='127.0.0.1', port=8080, debug=True)
 # [END app]
